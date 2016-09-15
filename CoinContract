@@ -1,0 +1,40 @@
+contract Coin{
+    
+    address public minter;
+    mapping (address => uint) public balances;
+    
+    function Coin()
+    {
+        minter = msg.sender;
+    }
+    
+    function mint(address receiver, uint numberOfCoins) returns (bool response)
+    {
+        if(msg.sender != minter)
+        {
+            throw;
+        }
+        
+        balances[receiver] = balances[receiver] + numberOfCoins;
+        return true;
+    }
+    
+    function send(address receiver, uint numberOfCoins) returns (bool response)
+    {
+        if(balances[msg.sender] < numberOfCoins)
+        {
+            throw;
+        }
+        
+        balances[msg.sender] = balances[msg.sender] - numberOfCoins;
+        balances[receiver] = balances[receiver] + numberOfCoins;
+        return true;
+    }
+    
+    function getBalance(address customer) returns (uint numberOfCoins)
+    {
+        return balances[customer];
+    }
+    
+    
+}
