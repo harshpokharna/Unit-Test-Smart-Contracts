@@ -1,0 +1,83 @@
+contract CoinTest{
+    
+    Coin coin = new Coin();
+    
+    Account nonMinterAccount = new Account(coin);
+    Account senderWithMoneyAccount = new Account(coin);
+    Account senderWithoutMoneyAccount = new Account(coin);
+    Account receiverAccount = new Account(coin);
+    
+    function CoinTest()
+    {
+        
+    }
+    
+    // Test - Is minter set properly?
+    function testIsMinterSet() returns (bool response)
+    {
+        address minterOfCoin = coin.minter();
+        
+        if(minterOfCoin == address(this))
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    // Test - Can minter mint coins?
+    function testCanMinterMintCoins() returns (bool response)
+    {
+        bool result = coin.mint(address(this), 5);
+        
+        if(coin.getBalance(address(this)) == 5)
+        {
+            return true;
+        }else{
+            
+            return false;
+        }
+        
+    }
+    
+    // Test - Can non-minters mint?
+    function testCanNonMintersNotMintCoins() returns (bool response)
+    {
+        nonMinterAccount.mint(address(nonMinterAccount), 10);
+        
+        if(coin.getBalance(address(nonMinterAccount)) == 0)
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    // Test - Can someone with money send it to others?
+    function testIsSendWorkingForSomeoneWithSufficientBalance() returns (bool response)
+    {
+        coin.mint(address(senderWithMoneyAccount), 10);
+        
+        senderWithMoneyAccount.send(address(receiverAccount), 5);
+        
+        if(coin.getBalance(receiverAccount) == 5)
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    // Test - Can someone with insufficient money send?
+    function testIsSendNotWorkingForSomeoneWithInsufficientMoney() returns (bool response)
+    {
+        senderWithoutMoneyAccount.send(address(receiverAccount), 5);
+        
+        if(coin.getBalance(receiverAccount) == 0)
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+}

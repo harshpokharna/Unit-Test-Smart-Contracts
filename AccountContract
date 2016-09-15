@@ -1,0 +1,21 @@
+contract Account
+{
+    Coin coin;
+    
+    function Account(Coin _coin)
+    {
+        coin = _coin;
+    }
+    
+    function mint(address receiver, uint numberOfCoins) returns (bool response)
+    {
+        bool result = coin.mint(receiver, numberOfCoins);
+        return result;
+    }
+    
+    function send(address receiver, uint numberOfCoins) returns (bool response)
+    {
+        bool result = coin.send(receiver, numberOfCoins);
+        return result;
+    }
+}
